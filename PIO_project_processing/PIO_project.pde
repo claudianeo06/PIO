@@ -122,6 +122,15 @@ void setupScene2(){
 
 void drawScene2(){
   background(0);
+  //maki
+  stroke(255);
+  fill(204, 102, 0);
+  rectMode(CENTER);
+  ellipse(makiX,makiY, makiWidth, makiHeight);
+  stroke(0);
+  line(makiX-1, plateY1,makiX+1,plateY1);
+  makiY++;
+  
   stroke(0,0,255);
   //vertical lines near plates
   line(crossX,0,crossX,plateY1-pathHalfWidth);
@@ -138,17 +147,9 @@ void drawScene2(){
   
   //plates
   stroke(255);
+  fill(255);
   ellipse(plateX,plateY1,platesDiameter,platesDiameter);
   ellipse(plateX,plateY2,platesDiameter,platesDiameter);
-  
-  //maki
-  stroke(255);
-  fill(204, 102, 0);
-  rectMode(CENTER);
-  ellipse(makiX,makiY, makiWidth, makiHeight);
-  stroke(0);
-  line(makiX-1, plateY1,makiX+1,plateY1);
-  makiY++;
 }
 
 void setupScene3(){
