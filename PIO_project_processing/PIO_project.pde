@@ -48,11 +48,7 @@ void keyPressed(){
   }
 }
 
-void draw() {  
-  if(mousePressed){
-    line(mouseX, mouseY, pmouseX, pmouseY);
-  }
-  
+void draw() {    
   // --------------------------------------------------------------------------
   // Write to the serial port (if open)
   if (serial != null) {
