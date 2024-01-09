@@ -12,11 +12,14 @@ final int BAUD_RATE    = 921600;
 Serial serial;
 byte[]buffer;
 
+PImage img;
+
 void setup() {
   // The Processing preprocessor only accepts literal values for size()
   // We can't do: size(TOTAL_WIDTH, TOTAL_HEIGHT);
   size(32, 32);
   
+  img = loadImage("win.png");
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
 
@@ -69,25 +72,28 @@ void draw() {
 void scene1(){
   background(0);
   fill(255);
-  text("Press", 2, 10);  
-  text("to", width/3, 18);  
-  text("start", 4, 26);  
+  textAlign(CENTER);
+  text("Press", width/2-1, 11);  
+  text("to", width/2, height/2+4);  
+  text("start", width/2, height/2+13);  
 }
+
 void scene2(){
   background(0);
   fill(random(255), random(255), random(255));
   text("2", width/3, 18);  
   ellipse(random(width), random(height), 10, 10);  
 }
+
 void scene3(){
   background(0);
   fill(random(255), random(255), random(255));
   text("3", width/3, 18);  
   ellipse(random(width), random(height), 10, 10);  
 }
+
 void scene4(){
   background(0);
-  fill(random(255), random(255), random(255));
-  text("4", width/3, 18);  
-  ellipse(random(width), random(height), 10, 10);  
+  imageMode(CENTER);
+  image(img, width/2, height/2, 20, 20);
 }
