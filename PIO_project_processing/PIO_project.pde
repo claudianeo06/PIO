@@ -12,7 +12,6 @@ final int BAUD_RATE    = 921600;
 Serial serial;
 byte[]buffer;
 
-PImage monster_img;
 PImage win_img;
 PImage egg_img;
 PImage swordfish_img;
@@ -63,7 +62,6 @@ void setup() {
   // We can't do: size(TOTAL_WIDTH, TOTAL_HEIGHT);
   size(32, 32);
   
-  monster_img = loadImage("monster.png");  
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
   salmon_img = loadImage("salmon.png");  
@@ -99,9 +97,6 @@ void keyPressed(){
   } else if(key == '3'){
     currentScene = 3;
     setupScene3();
-  }else if(key == '4'){
-    currentScene = 4;
-    setupScene4();
   }
 }
 
@@ -112,8 +107,6 @@ void draw() {
     drawScene2();
   } else if (currentScene == 3) {
     drawScene3();
-  } else if (currentScene == 4) {
-    drawScene4();
   }
   // --------------------------------------------------------------------------
   // Write to the serial port (if open)
@@ -228,16 +221,6 @@ void drawScene2(){
 
 void setupScene3(){
   background(0);
-  fill(random(255), random(255), random(255));
-  text("3", width/3, 18);  
-  image(monster_img, 24, 12, 10, 10);
-}
-
-void drawScene3(){
-}
-
-void setupScene4(){
-  background(0);
 
   snow = new Confetti[100];
   for(int i=0; i<snow.length; i++){
@@ -245,7 +228,7 @@ void setupScene4(){
     }
 }
 
-void drawScene4(){
+void drawScene3(){
   background(0);
   for(Confetti s : snow){
     s.fall();
