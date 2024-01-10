@@ -9,8 +9,6 @@ final int TOTAL_HEIGHT = 32;
 final int NUM_CHANNELS = 3;
 final int BAUD_RATE    = 921600;
 
-int currentScene = 1;
-
 Serial serial;
 byte[]buffer;
 
@@ -21,6 +19,44 @@ PImage swordfish_img;
 PImage salmon_img;
 
 Confetti[] snow;
+
+int currentScene = 1;
+
+//colors
+color orange = color(204, 102, 0);
+color black = color(0);
+color white = color(255);
+color grey = color(150,150,150);
+color blue = color(0,0,150);
+color red = color(255,0,0);
+color violet = color(30,30,100);
+color green = color(0,255,0);
+
+int ledLength = 32;
+int pathWidth = 10;
+int horizPathY = 7;
+int vertPath1X = 8;
+int vertPath2X = ledLength-vertPath1X;
+int vertPathY = 20;
+int vertPathLength = 15;
+
+int platesDiameter = 15;
+int platesDiameterSmall = 10;
+int plateY = 32;
+int plateX1 = vertPath1X;
+int plateX2 = vertPath2X;
+
+int makiX = 0;
+int makiY = horizPathY;
+int makiWidth = 4;
+int makiHeight = 8;
+
+//counters
+int counter1 = 0;
+int counter2 = 0;
+
+boolean downOk = false;
+
 
 void setup() {
   // The Processing preprocessor only accepts literal values for size()
@@ -34,6 +70,8 @@ void setup() {
   swordfish_img = loadImage("swordfish.png");  
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
+  
+  
 
   String[] list = Serial.list();
   printArray(list);
@@ -106,60 +144,86 @@ void setupScene1(){
 void drawScene1(){
 }
 
-int platesDiameter = 10;
-int plateX = 6;
-int plateY1 = 7;
-int plateY2 = 25;
 
-int crossX = 15;
-int secondVerticalLineX = 21;
-int pathHalfWidth = 3;
-
-int makiX = crossX+3;
-int makiY = 7;
-int makiWidth = 4;
-int makiHeight = 8;
 
 void setupScene2(){
-  background(0);
-  //fill(random(255), random(255), random(255));
-  //text("2", width/3, 18);  
-  //ellipse(random(width), random(height), 10, 10);  
+  
+  
 
 }
 
 void drawScene2(){
   background(0);
-  //maki
-  //stroke(255);
-  //fill(204, 102, 0);
-  //rectMode(CENTER);
-  //ellipse(makiX,makiY, makiWidth, makiHeight);
-  stroke(0);
-  imageMode(CENTER);
-  image(salmon_img, makiX, makiY, makiWidth, makiHeight);
-  line(makiX-1, plateY1,makiX+1,plateY1);
-  makiY++;
-  
-  stroke(0,0,255);
-  //vertical lines near plates
-  line(crossX,0,crossX,plateY1-pathHalfWidth);
-  line(crossX,plateY1+pathHalfWidth,crossX,plateY2-pathHalfWidth);
-  line(crossX,plateY2+pathHalfWidth,crossX,32);
-  //vertical lines
-  line(secondVerticalLineX,0,secondVerticalLineX,32);
-  
-  //horizontal lines
-  line(crossX,plateY1+pathHalfWidth,plateY1,plateY1+pathHalfWidth);
-  line(crossX,plateY1-pathHalfWidth,plateY1,plateY1-pathHalfWidth);
-  line(crossX,plateY2+pathHalfWidth,plateY1,plateY2+pathHalfWidth);
-  line(crossX,plateY2-pathHalfWidth,plateY1,plateY2-pathHalfWidth);
+  //sushi path
+  fill(violet);
+  stroke(blue);
+  rectMode(CENTER);
+  rect(ledLength/2-1,horizPathY,ledLength+2, pathWidth);
+  rect(vertPath1X, vertPathY, pathWidth, vertPathLength);
+  rect(vertPath2X, vertPathY, pathWidth, vertPathLength);
   
   //plates
-  stroke(255);
-  fill(255);
-  ellipse(plateX,plateY1,platesDiameter,platesDiameter);
-  ellipse(plateX,plateY2,platesDiameter,platesDiameter);
+  stroke(black);
+  fill(white);
+  ellipse(plateX1,plateY,platesDiameter,platesDiameter);
+  ellipse(plateX2,plateY,platesDiameter,platesDiameter);
+  //plates shadow
+  //stroke(black);
+  //noFill();
+  //ellipse(plateX1,plateY,platesDiameterSmall,platesDiameterSmall);
+  //ellipse(plateX2,plateY,platesDiameterSmall,platesDiameterSmall);
+  
+  //counters
+ 
+  //textMode(CENTER);
+  //textAlign(CENTER);
+  //textSize(10);
+  //text(counter1, plateX1, plateY+4);
+  //text(counter2, plateX2, plateY+4);
+  
+  
+
+  
+  
+  //this block has to be used for each sushi (use a for loop?)
+  //
+  if((makiX > vertPath1X-2) && (makiX < vertPath1X+2) && keyPressed){ //add the "or second path" here
+    downOk = true;
+  }
+  if (downOk){
+    if(makiY < plateY){
+      makiY++;
+    } else {
+      counter1++;
+      downOk = false;
+    }
+  } else {
+    makiX++;
+  }
+  
+  
+  fill(red);
+  stroke(red);
+  line(15,31,15-counter1,31);
+  fill(green);
+  stroke(green);
+  line(16,31,16+counter2,31);
+  
+  
+  //maki display
+  if(makiY < plateY - platesDiameter/2-2){
+    stroke(black);
+    imageMode(CENTER);
+    if(downOk){
+      //translate(-makiX/2,-makiY/2);
+      //rotate(PI/2.);
+    }
+    image(egg_img, makiX, makiY, 18, 18);
+    //stroke(orange);
+    //fill(orange);
+    //rectMode(CENTER);
+    //rect(makiX,makiY, 7, 7);
+  }
 }
 
 void setupScene3(){
