@@ -24,16 +24,17 @@ int currentScene = 1;
 //colors
 color orange = color(204, 102, 0);
 color black = color(0);
-color white = color(255);
+color white = color(150);
 color grey = color(150,150,150);
 color blue = color(0,0,150);
 color red = color(255,0,0);
 color violet = color(30,30,100);
 color green = color(0,255,0);
+color yellow = color(255,240,0);
 
 int ledLength = 32;
-int pathWidth = 10;
-int horizPathY = 7;
+int pathWidth = 14;
+int horizPathY = 8;
 int vertPath1X = 8;
 int vertPath2X = ledLength-vertPath1X;
 int vertPathY = 20;
@@ -45,10 +46,16 @@ int plateY = 32;
 int plateX1 = vertPath1X;
 int plateX2 = vertPath2X;
 
-int makiX = 0;
-int makiY = horizPathY;
-int makiWidth = 4;
-int makiHeight = 8;
+int eggX = -10;
+int eggY = horizPathY;
+int eggWidth = 4;//to we use it?
+int eggHeight = 8;
+
+int salmonX = -30;
+int salmonY = horizPathY;
+
+int swordfishX = -50;
+int swordfishY = horizPathY;
 
 //counters
 int counter1 = 0;
@@ -148,75 +155,135 @@ void setupScene2(){
 void drawScene2(){
   background(0);
   //sushi path
-  fill(violet);
+  fill(white);
   stroke(blue);
   rectMode(CENTER);
+  quad(TOTAL_WIDTH/2-pathWidth+3, horizPathY+3, TOTAL_WIDTH/2+3, horizPathY+3, 8,32, 8-pathWidth,32); //left
+  quad(TOTAL_WIDTH/2+pathWidth-3, horizPathY+3, TOTAL_WIDTH/2-3, horizPathY+3, 24,32, 24+pathWidth,32); //right
   rect(ledLength/2-1,horizPathY,ledLength+2, pathWidth);
-  rect(vertPath1X, vertPathY, pathWidth, vertPathLength);
-  rect(vertPath2X, vertPathY, pathWidth, vertPathLength);
+  //rect(vertPath1X, vertPathY, pathWidth, vertPathLength);
+  //rect(vertPath2X, vertPathY, pathWidth, vertPathLength);
   
   //plates
-  stroke(black);
-  fill(white);
-  ellipse(plateX1,plateY,platesDiameter,platesDiameter);
-  ellipse(plateX2,plateY,platesDiameter,platesDiameter);
-  //plates shadow
   //stroke(black);
-  //noFill();
-  //ellipse(plateX1,plateY,platesDiameterSmall,platesDiameterSmall);
-  //ellipse(plateX2,plateY,platesDiameterSmall,platesDiameterSmall);
+  //fill(white);
+  //ellipse(plateX1,plateY,platesDiameter,platesDiameter);
+  //ellipse(plateX2,plateY,platesDiameter,platesDiameter);
   
-  //counters
- 
-  //textMode(CENTER);
-  //textAlign(CENTER);
-  //textSize(10);
-  //text(counter1, plateX1, plateY+4);
-  //text(counter2, plateX2, plateY+4);
-  
-  
-
-  
-  
+  //.............................................................................egg..........................................................................
   //this block has to be used for each sushi (use a for loop?)
   //
-  if((makiX > vertPath1X-2) && (makiX < vertPath1X+2) && keyPressed){ //add the "or second path" here
+  if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
     downOk = true;
   }
   if (downOk){
-    if(makiY < plateY){
-      makiY++;
+    if(eggY < plateY){
+      eggY++;
     } else {
-      counter1++;
+      if((eggX > vertPath1X-2) && (eggX < vertPath1X+2)){
+        counter1++;
+      } else {
+        counter2++;
+      }
       downOk = false;
     }
   } else {
-    makiX++;
+    eggX++;
   }
   
-  
-  fill(red);
-  stroke(red);
-  line(15,31,15-counter1,31);
-  fill(green);
-  stroke(green);
-  line(16,31,16+counter2,31);
-  
-  
-  //maki display
-  if(makiY < plateY - platesDiameter/2-2){
+  if(eggX > 39){
+    eggX = -22;
+  }
+  //sushi display
+  if(eggY < plateY - platesDiameter/2-2){
     stroke(black);
     imageMode(CENTER);
     if(downOk){
-      //translate(-makiX/2,-makiY/2);
+      //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
-    image(egg_img, makiX, makiY, 18, 18);
-    //stroke(orange);
-    //fill(orange);
-    //rectMode(CENTER);
-    //rect(makiX,makiY, 7, 7);
+    image(egg_img, eggX, eggY, 18, 18);
   }
+  
+  //.............................................................................salmon..........................................................................
+
+  if((((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)) || ((salmonX > vertPath2X-2) && (salmonX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
+    downOk = true;
+  }
+  if (downOk){
+    if(salmonY < plateY){
+      salmonY++;
+    } else {
+      if((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)){
+        counter1++;
+      } else {
+        counter2++;
+      }
+      downOk = false;
+    }
+  } else {
+    salmonX++;
+  }
+  
+  if(salmonX > 39){
+    salmonX = -22;
+  }
+  
+  //sushi display
+  if(salmonY < plateY - platesDiameter/2-2){
+    stroke(black);
+    imageMode(CENTER);
+    if(downOk){
+      //translate(-eggX/2,-eggY/2);
+      //rotate(PI/2.);
+    }
+    image(salmon_img, salmonX, salmonY, 18, 18);
+  }
+  //.............................................................................swordfish..........................................................................
+  if((((swordfishX > vertPath1X-2) && (swordfishX < vertPath1X+2)) || ((swordfishX > vertPath2X-2) && (swordfishX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
+    downOk = true;
+  }
+  if (downOk){
+    if(swordfishY < plateY){
+      swordfishY++;
+    } else {
+      if((swordfishX > vertPath1X-2) && (swordfishX < vertPath1X+2)){
+        counter1++;
+      } else {
+        counter2++;
+      }
+      downOk = false;
+    }
+  } else {
+    swordfishX++;
+  }
+  
+  if(swordfishX > 39){
+    swordfishX = -22;
+  }
+
+  //sushi display
+  if(swordfishY < plateY - platesDiameter/2-2){
+    stroke(black);
+    imageMode(CENTER);
+    if(downOk){
+      //translate(-eggX/2,-eggY/2);
+      //rotate(PI/2.);
+    }
+    image(swordfish_img, swordfishX, swordfishY, 18, 18);
+  }
+  
+  
+  //points system
+  fill(yellow);
+  stroke(yellow);
+  line(15,0,16,0);
+  fill(red);
+  stroke(red);
+  line(0,0,counter1,0);
+  fill(green);
+  stroke(green);
+  line(31,0,31-counter2,0);
 }
 
 void setupScene3(){
