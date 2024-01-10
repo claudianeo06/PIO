@@ -16,6 +16,11 @@ byte[]buffer;
 
 PImage monster_img;
 PImage win_img;
+PImage egg_img;
+PImage swordfish_img;
+PImage salmon_img;
+
+Confetti[] snow;
 
 void setup() {
   // The Processing preprocessor only accepts literal values for size()
@@ -24,6 +29,9 @@ void setup() {
   
   monster_img = loadImage("monster.png");  
   win_img = loadImage("win.png");  
+  egg_img = loadImage("egg.png");  
+  salmon_img = loadImage("salmon.png");  
+  swordfish_img = loadImage("swordfish.png");  
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
 
@@ -123,11 +131,13 @@ void setupScene2(){
 void drawScene2(){
   background(0);
   //maki
-  stroke(255);
-  fill(204, 102, 0);
-  rectMode(CENTER);
-  ellipse(makiX,makiY, makiWidth, makiHeight);
+  //stroke(255);
+  //fill(204, 102, 0);
+  //rectMode(CENTER);
+  //ellipse(makiX,makiY, makiWidth, makiHeight);
   stroke(0);
+  imageMode(CENTER);
+  image(salmon_img, makiX, makiY, makiWidth, makiHeight);
   line(makiX-1, plateY1,makiX+1,plateY1);
   makiY++;
   
@@ -164,9 +174,19 @@ void drawScene3(){
 
 void setupScene4(){
   background(0);
-  imageMode(CENTER);
-  image(win_img, width/2, height/2, 20, 20);
+
+  snow = new Confetti[100];
+  for(int i=0; i<snow.length; i++){
+    snow[i] = new Confetti();
+    }
 }
 
 void drawScene4(){
-}
+  background(0);
+  for(Confetti s : snow){
+    s.fall();
+    s.display();
+    }
+  imageMode(CENTER);
+  image(win_img, width/2, height/2, 20, 20);
+ }
