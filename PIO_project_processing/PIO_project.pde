@@ -12,6 +12,7 @@ final int BAUD_RATE    = 921600;
 Serial serial;
 byte[]buffer;
 
+PImage SBlogo_img;
 PImage win_img;
 PImage egg_img;
 PImage swordfish_img;
@@ -69,6 +70,7 @@ void setup() {
   // We can't do: size(TOTAL_WIDTH, TOTAL_HEIGHT);
   size(32, 32);
   
+  SBlogo_img = loadImage("SBlogo.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
   salmon_img = loadImage("salmon.png");  
@@ -134,21 +136,19 @@ void draw() {
 
 void setupScene1(){
   background(0);
-  fill(255);
-  textAlign(CENTER);
-  text("Press", width/2-1, 11);  
-  text("to", width/2, height/2+4);  
-  text("start", width/2, height/2+13);  
+  imageMode(CENTER);
+  image(SBlogo_img, width/2, height/2, 32, 32);
+  //textAlign(CENTER);
+  //text("Press", width/2-1, 11);  
+  //text("to", width/2, height/2+4);  
+  //text("start", width/2, height/2+13);  
 }
 
 void drawScene1(){
 }
 
 
-
 void setupScene2(){
-  
-  
 
 }
 
