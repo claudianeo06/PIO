@@ -17,7 +17,7 @@ PImage background_img;
 PImage win_img;
 PImage egg_img;
 PImage maki_img;
-PImage salmon_img;
+PImage rice_img;
 
 //confetti
 Confetti[] flake;
@@ -54,8 +54,8 @@ int plateX2 = vertPath2X;
 //sushi
 int eggX = -10;
 int eggY = horizPathY;
-int salmonX = -30;
-int salmonY = horizPathY;
+int riceX = -30;
+int riceY = horizPathY;
 int makiX = -50;
 int makiY = horizPathY;
 
@@ -69,8 +69,11 @@ boolean player2Blocked = false;
 
 boolean downOk = false;
 boolean downOkEgg = false;
-boolean downOkSalmon = false;
+boolean downOkrice = false;
 boolean downOkmaki = false;
+
+//game running
+boolean isGameRunning = true;
 
 
 void setup() {
@@ -79,8 +82,10 @@ void setup() {
   background_img = loadImage("background.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
-  salmon_img = loadImage("salmon.png");  
+  rice_img = loadImage("rice.png");  
   maki_img = loadImage("maki.png");  
+  
+  isGameRunning = true;
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
 
@@ -99,15 +104,20 @@ void setup() {
   
   background(0);
   textAlign(CENTER);
+  fill(255);
   text("Press", width/2-1, 11);  
   text("to", width/2, height/2+4);  
   text("start", width/2, height/2+13);  
+  counter1 = 0;
+  counter2 = 0;
 }
  
 void keyPressed(){
-  if(key =='a' || key == 'k'){
-    currentScene = 2;
-    setupScene2();
+  if(isGameRunning == true){
+    if(key =='a' || key == 'k'){
+      currentScene = 2;
+      setupScene2();
+    }
   }
 }
 
@@ -116,7 +126,9 @@ void keyReleased(){
 }
 
 void draw() {    
-  if (currentScene == 2) {
+  if (currentScene ==1){
+    setup();
+  } else if (currentScene == 2) {
     drawScene2();
   } else if (currentScene == 3) {
     drawScene3();
@@ -202,41 +214,41 @@ void drawScene2(){
     image(egg_img, eggX, eggY);
   }
   
-  //.............................................................................salmon..........................................................................
+  //.............................................................................rice..........................................................................
 
-  if((((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)) || ((salmonX > vertPath2X-2) && (salmonX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){ //add the "or second path" here
+  if((((riceX > vertPath1X-2) && (riceX < vertPath1X+2)) || ((riceX > vertPath2X-2) && (riceX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){ //add the "or second path" here
     if((key == 'a') || (key == 'k')){
-      downOkSalmon = true;
+      downOkrice = true;
     }
   }
-  if (downOkSalmon){
-    if(salmonY < plateY){
-      salmonY++;
+  if (downOkrice){
+    if(riceY < plateY){
+      riceY++;
     } else {
-      if((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)){
+      if((riceX > vertPath1X-2) && (riceX < vertPath1X+2)){
         counter1++;
       } else {
         counter2++;
       }
-      downOkSalmon = false;
+      downOkrice = false;
     }
   } else {
-    salmonX++;
+    riceX++;
   }
   
-  if(salmonX > 39){
-    salmonX = -22;
+  if(riceX > 39){
+    riceX = -22;
   }
   
   //sushi display
-  if(salmonY < plateY - platesDiameter/2-2){
+  if(riceY < plateY - platesDiameter/2-2){
     stroke(black);
     imageMode(CENTER);
-    if(downOkSalmon){
+    if(downOkrice){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
-    image(salmon_img, salmonX, salmonY);
+    image(rice_img, riceX, riceY);
   }
   //.............................................................................maki..........................................................................
   if((((makiX > vertPath1X-2) && (makiX < vertPath1X+2)) || ((makiX > vertPath2X-2) && (makiX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
@@ -322,6 +334,8 @@ void setupScene3(){
 void drawScene3(){
   background(0);
   
+  isGameRunning = false;
+  
   //confetti
   for(Confetti f : flake){
     f.fall();
@@ -342,4 +356,8 @@ void drawScene3(){
   //winning image
   imageMode(CENTER);
   image(win_img, width/2, height/2, 20, 20);
+  
+  if(key == ' '){
+    currentScene = 1;
+  }
  }
