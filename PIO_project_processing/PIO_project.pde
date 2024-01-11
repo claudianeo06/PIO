@@ -111,6 +111,10 @@ void keyPressed(){
   }
 }
 
+void keyReleased(){
+    //player2Blocked = false;
+}
+
 void draw() {    
   if (currentScene == 2) {
     drawScene2();
@@ -142,8 +146,7 @@ void setupScene2(){
 void drawScene2(){
   background(0);
   imageMode(CENTER);
-  image(background_img, width/2, height/2);
-  
+  image(background_img, width/2,height/2);
   //sushi path
   //fill(white);
   //stroke(blue);
@@ -164,7 +167,7 @@ void drawScene2(){
   //.............................................................................egg..........................................................................
   //this block has to be used for each sushi (use a for loop?)
   //
-  if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed){
+  if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
     if((key == 'a') || (key == 'k')){
       downOkEgg = true;
       if((eggX > vertPath1X-2) && (eggX < vertPath1X+2)){
@@ -201,7 +204,7 @@ void drawScene2(){
   
   //.............................................................................salmon..........................................................................
 
-  if((((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)) || ((salmonX > vertPath2X-2) && (salmonX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
+  if((((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)) || ((salmonX > vertPath2X-2) && (salmonX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){ //add the "or second path" here
     if((key == 'a') || (key == 'k')){
       downOkSalmon = true;
     }
@@ -259,8 +262,6 @@ void drawScene2(){
   if(makiX > 39){
     makiX = -22;
   }
-  
-  //blocking part
 
   //sushi display
   if(makiY < plateY - platesDiameter/2-2){
