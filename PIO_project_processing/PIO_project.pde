@@ -62,7 +62,14 @@ int swordfishY = horizPathY;
 int counter1 = 0;
 int counter2 = 0;
 
+//blocking part
+boolean player1Blocked = false;
+boolean player2Blocked = false;
+
 boolean downOk = false;
+boolean downOkEgg = false;
+boolean downOkSalmon = false;
+boolean downOkSwordfish = false;
 
 
 void setup() {
@@ -87,7 +94,7 @@ void setup() {
     // On macOS / Linux see the console for all wavailable ports
     //final String PORT_NAME = "/dev/cu.usbserial-02B60E77";
     // On Windows the ports are numbered
-    final String PORT_NAME = "COM4";
+    final String PORT_NAME = "COM5";
     serial = new Serial(this, PORT_NAME, BAUD_RATE);
   } catch (Exception e) {
     println("Serial port not intialized...");
@@ -158,8 +165,8 @@ void drawScene2(){
   fill(white);
   stroke(blue);
   rectMode(CENTER);
-  quad(TOTAL_WIDTH/2-pathWidth+3, horizPathY+3, TOTAL_WIDTH/2+3, horizPathY+3, 8,32, 8-pathWidth,32); //left
-  quad(TOTAL_WIDTH/2+pathWidth-3, horizPathY+3, TOTAL_WIDTH/2-3, horizPathY+3, 24,32, 24+pathWidth,32); //right
+  quad(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 8,32, 8-pathWidth,32); //left
+  quad(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 24,32, 24+pathWidth,32); //right
   rect(ledLength/2-1,horizPathY,ledLength+2, pathWidth);
   //rect(vertPath1X, vertPathY, pathWidth, vertPathLength);
   //rect(vertPath2X, vertPathY, pathWidth, vertPathLength);
@@ -175,19 +182,20 @@ void drawScene2(){
   //
   if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed){
     if((key == 'a') || (key == 'k')){
-      downOk = true;
+      downOkEgg = true;
+      if((eggX > vertPath1X-2) && (eggX < vertPath1X+2)){
+        counter1++;
+      } else if((eggX > vertPath2X-2) && (eggX < vertPath2X+2)){
+        counter2++;
+      }
     }
   }
-  if (downOk){
+  if (downOkEgg){
     if(eggY < plateY){
       eggY++;
     } else {
-      if((eggX > vertPath1X-2) && (eggX < vertPath1X+2)){
-        counter1++;
-      } else {
-        counter2++;
-      }
-      downOk = false;
+      //
+      downOkEgg = false;
     }
   } else {
     eggX++;
@@ -200,7 +208,7 @@ void drawScene2(){
   if(eggY < plateY - platesDiameter/2-2){
     stroke(black);
     imageMode(CENTER);
-    if(downOk){
+    if(downOkEgg){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
@@ -210,9 +218,11 @@ void drawScene2(){
   //.............................................................................salmon..........................................................................
 
   if((((salmonX > vertPath1X-2) && (salmonX < vertPath1X+2)) || ((salmonX > vertPath2X-2) && (salmonX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
-    downOk = true;
+    if((key == 'a') || (key == 'k')){
+      downOkSalmon = true;
+    }
   }
-  if (downOk){
+  if (downOkSalmon){
     if(salmonY < plateY){
       salmonY++;
     } else {
@@ -221,7 +231,7 @@ void drawScene2(){
       } else {
         counter2++;
       }
-      downOk = false;
+      downOkSalmon = false;
     }
   } else {
     salmonX++;
@@ -235,17 +245,19 @@ void drawScene2(){
   if(salmonY < plateY - platesDiameter/2-2){
     stroke(black);
     imageMode(CENTER);
-    if(downOk){
+    if(downOkSalmon){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
     image(salmon_img, salmonX, salmonY, 18, 18);
   }
   //.............................................................................swordfish..........................................................................
-  if((((swordfishX > vertPath1X-2) && (swordfishX < vertPath1X+2)) || ((swordfishX > vertPath2X-2) && (swordfishX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
-    downOk = true;
+  if((((swordfishX > vertPath1X-2) && (swordfishX < vertPath1X+2)) || ((swordfishX > vertPath2X-2) && (swordfishX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
+    if((key == 'a') || (key == 'k')){
+      downOkSwordfish = true;
+    }
   }
-  if (downOk){
+  if (downOkSwordfish){
     if(swordfishY < plateY){
       swordfishY++;
     } else {
@@ -254,7 +266,7 @@ void drawScene2(){
       } else {
         counter2++;
       }
-      downOk = false;
+      downOkSwordfish = false;
     }
   } else {
     swordfishX++;
@@ -263,12 +275,14 @@ void drawScene2(){
   if(swordfishX > 39){
     swordfishX = -22;
   }
+  
+  //blocking part
 
   //sushi display
   if(swordfishY < plateY - platesDiameter/2-2){
     stroke(black);
     imageMode(CENTER);
-    if(downOk){
+    if(downOkSwordfish){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
@@ -276,7 +290,23 @@ void drawScene2(){
   }
   
   
-  //block
+  //blocking part
+  if (keyPressed){
+    if(key == 's'){ //long press
+      stroke(red);
+      line(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
+      player2Blocked = true;
+    } else {
+      player2Blocked = false;
+    }
+    if(key == 'l'){ //long press
+      stroke(green);
+      line(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
+      player1Blocked = true;
+    } else {
+      player1Blocked = false;
+    }
+  }
   
   //points system
   fill(yellow);
