@@ -87,7 +87,7 @@ void setup() {
     // On macOS / Linux see the console for all wavailable ports
     //final String PORT_NAME = "/dev/cu.usbserial-02B60E77";
     // On Windows the ports are numbered
-    final String PORT_NAME = "COM5";
+    final String PORT_NAME = "COM4";
     serial = new Serial(this, PORT_NAME, BAUD_RATE);
   } catch (Exception e) {
     println("Serial port not intialized...");
@@ -136,12 +136,12 @@ void draw() {
 
 void setupScene1(){
   background(0);
-  imageMode(CENTER);
-  image(SBlogo_img, width/2, height/2, 32, 32);
-  //textAlign(CENTER);
-  //text("Press", width/2-1, 11);  
-  //text("to", width/2, height/2+4);  
-  //text("start", width/2, height/2+13);  
+  //imageMode(CENTER);
+  //image(SBlogo_img, width/2, height/2, 32, 32);
+  textAlign(CENTER);
+  text("Press", width/2-1, 11);  
+  text("to", width/2, height/2+4);  
+  text("start", width/2, height/2+13);  
 }
 
 void drawScene1(){
