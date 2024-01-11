@@ -12,7 +12,7 @@ final int BAUD_RATE    = 921600;
 Serial serial;
 byte[]buffer;
 
-PImage SBlogo_img;
+//PImage SBlogo_img;
 PImage win_img;
 PImage egg_img;
 PImage swordfish_img;
@@ -70,7 +70,7 @@ void setup() {
   // We can't do: size(TOTAL_WIDTH, TOTAL_HEIGHT);
   size(32, 32);
   
-  SBlogo_img = loadImage("SBlogo.png");
+//  SBlogo_img = loadImage("SBlogo.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
   salmon_img = loadImage("salmon.png");  
@@ -173,8 +173,10 @@ void drawScene2(){
   //.............................................................................egg..........................................................................
   //this block has to be used for each sushi (use a for loop?)
   //
-  if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed){ //add the "or second path" here
-    downOk = true;
+  if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed){
+    if((key == 'a') || (key == 'k')){
+      downOk = true;
+    }
   }
   if (downOk){
     if(eggY < plateY){
@@ -273,6 +275,8 @@ void drawScene2(){
     image(swordfish_img, swordfishX, swordfishY, 18, 18);
   }
   
+  
+  //block
   
   //points system
   fill(yellow);
