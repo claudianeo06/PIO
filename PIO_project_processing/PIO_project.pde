@@ -1,5 +1,5 @@
 /**
- * This Processing sketch sends all the pixels of the canvas to the serial port.
+ * Sushi Battle by Claudia Neo and Kristina Greco
  */
 
 import processing.serial.*;
@@ -12,27 +12,29 @@ final int BAUD_RATE    = 921600;
 Serial serial;
 byte[]buffer;
 
-//PImage SBlogo_img;
+//images
 PImage win_img;
 PImage egg_img;
 PImage swordfish_img;
 PImage salmon_img;
 
-Confetti[] snow;
+//confetti
+Confetti[] flake;
 
 int currentScene = 1;
 
 //colors
+color red = color(255,0,0);
 color orange = color(204, 102, 0);
+color yellow = color(255,240,0);
+color green = color(0,255,0);
+color blue = color(0,0,150);
+color violet = color(30,30,100);
+color grey = color(150,150,150);
 color black = color(0);
 color white = color(150);
-color grey = color(150,150,150);
-color blue = color(0,0,150);
-color red = color(255,0,0);
-color violet = color(30,30,100);
-color green = color(0,255,0);
-color yellow = color(255,240,0);
 
+//path
 int ledLength = 32;
 int pathWidth = 14;
 int horizPathY = 8;
@@ -41,20 +43,18 @@ int vertPath2X = ledLength-vertPath1X;
 int vertPathY = 20;
 int vertPathLength = 15;
 
+//goal(plates)
 int platesDiameter = 15;
 int platesDiameterSmall = 10;
 int plateY = 32;
 int plateX1 = vertPath1X;
 int plateX2 = vertPath2X;
 
+//sushi
 int eggX = -10;
 int eggY = horizPathY;
-int eggWidth = 4;//to we use it?
-int eggHeight = 8;
-
 int salmonX = -30;
 int salmonY = horizPathY;
-
 int swordfishX = -50;
 int swordfishY = horizPathY;
 
@@ -73,19 +73,14 @@ boolean downOkSwordfish = false;
 
 
 void setup() {
-  // The Processing preprocessor only accepts literal values for size()
-  // We can't do: size(TOTAL_WIDTH, TOTAL_HEIGHT);
   size(32, 32);
   
-//  SBlogo_img = loadImage("SBlogo.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
   salmon_img = loadImage("salmon.png");  
   swordfish_img = loadImage("swordfish.png");  
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
-  
-  
 
   String[] list = Serial.list();
   printArray(list);
@@ -99,31 +94,28 @@ void setup() {
   } catch (Exception e) {
     println("Serial port not intialized...");
   }  
+  
   background(0);
+  textAlign(CENTER);
+  text("Press", width/2-1, 11);  
+  text("to", width/2, height/2+4);  
+  text("start", width/2, height/2+13);  
 }
  
- 
 void keyPressed(){
-  if(key =='1'){
-    currentScene = 1;
-    setupScene1();
-  } else if(key =='2'){
+  if(key =='a' || key == 'k'){
     currentScene = 2;
     setupScene2();
-  } else if(key == '3'){
-    currentScene = 3;
-    setupScene3();
   }
 }
 
 void draw() {    
-    if (currentScene == 1) {
-    drawScene1();
-  } else if (currentScene == 2) {
+  if (currentScene == 2) {
     drawScene2();
   } else if (currentScene == 3) {
     drawScene3();
   }
+  
   // --------------------------------------------------------------------------
   // Write to the serial port (if open)
   if (serial != null) {
@@ -141,26 +133,13 @@ void draw() {
 }
 
 
-void setupScene1(){
-  background(0);
-  //imageMode(CENTER);
-  //image(SBlogo_img, width/2, height/2, 32, 32);
-  textAlign(CENTER);
-  text("Press", width/2-1, 11);  
-  text("to", width/2, height/2+4);  
-  text("start", width/2, height/2+13);  
-}
-
-void drawScene1(){
-}
-
-
 void setupScene2(){
 
 }
 
 void drawScene2(){
   background(0);
+  
   //sushi path
   fill(white);
   stroke(blue);
@@ -289,7 +268,6 @@ void drawScene2(){
     image(swordfish_img, swordfishX, swordfishY, 18, 18);
   }
   
-  
   //blocking part
   if (keyPressed){
     if(key == 's'){ //long press
@@ -318,23 +296,44 @@ void drawScene2(){
   fill(green);
   stroke(green);
   line(31,0,31-counter2,0);
+  
+  if((counter1 == 14) || (counter2 == 14)){
+    currentScene = 3;
+    setupScene3();
+  } 
 }
+
 
 void setupScene3(){
   background(0);
 
-  snow = new Confetti[100];
-  for(int i=0; i<snow.length; i++){
-    snow[i] = new Confetti();
+  flake = new Confetti[100];
+  for(int i=0; i<flake.length; i++){
+    flake[i] = new Confetti();
     }
 }
 
 void drawScene3(){
   background(0);
-  for(Confetti s : snow){
-    s.fall();
-    s.display();
+  
+  //confetti
+  for(Confetti f : flake){
+    f.fall();
+    f.display();
     }
+    
+  //points system
+  fill(yellow);
+  stroke(yellow);
+  line(15,0,16,0);
+  fill(red);
+  stroke(red);
+  line(0,0,counter1,0);
+  fill(green);
+  stroke(green);
+  line(31,0,31-counter2,0);
+  
+  //winning image
   imageMode(CENTER);
   image(win_img, width/2, height/2, 20, 20);
  }
