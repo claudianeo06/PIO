@@ -13,9 +13,10 @@ Serial serial;
 byte[]buffer;
 
 //images
+PImage background_img;
 PImage win_img;
 PImage egg_img;
-PImage swordfish_img;
+PImage maki_img;
 PImage salmon_img;
 
 //confetti
@@ -55,8 +56,8 @@ int eggX = -10;
 int eggY = horizPathY;
 int salmonX = -30;
 int salmonY = horizPathY;
-int swordfishX = -50;
-int swordfishY = horizPathY;
+int makiX = -50;
+int makiY = horizPathY;
 
 //counters
 int counter1 = 0;
@@ -69,16 +70,17 @@ boolean player2Blocked = false;
 boolean downOk = false;
 boolean downOkEgg = false;
 boolean downOkSalmon = false;
-boolean downOkSwordfish = false;
+boolean downOkmaki = false;
 
 
 void setup() {
   size(32, 32);
   
+  background_img = loadImage("background.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
   salmon_img = loadImage("salmon.png");  
-  swordfish_img = loadImage("swordfish.png");  
+  maki_img = loadImage("maki.png");  
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
 
@@ -139,14 +141,17 @@ void setupScene2(){
 
 void drawScene2(){
   background(0);
+  imageMode(CENTER);
+  image(background_img, width/2, height/2);
   
   //sushi path
-  fill(white);
-  stroke(blue);
-  rectMode(CENTER);
-  quad(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 8,32, 8-pathWidth,32); //left
-  quad(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 24,32, 24+pathWidth,32); //right
-  rect(ledLength/2-1,horizPathY,ledLength+2, pathWidth);
+  //fill(white);
+  //stroke(blue);
+  //rectMode(CENTER);
+  //quad(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 8,32, 8-pathWidth,32); //left
+  //quad(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 24,32, 24+pathWidth,32); //right
+  //rect(ledLength/2-1,horizPathY,ledLength+2, pathWidth);
+  
   //rect(vertPath1X, vertPathY, pathWidth, vertPathLength);
   //rect(vertPath2X, vertPathY, pathWidth, vertPathLength);
   
@@ -191,7 +196,7 @@ void drawScene2(){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
-    image(egg_img, eggX, eggY, 18, 18);
+    image(egg_img, eggX, eggY);
   }
   
   //.............................................................................salmon..........................................................................
@@ -228,44 +233,44 @@ void drawScene2(){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
-    image(salmon_img, salmonX, salmonY, 18, 18);
+    image(salmon_img, salmonX, salmonY);
   }
-  //.............................................................................swordfish..........................................................................
-  if((((swordfishX > vertPath1X-2) && (swordfishX < vertPath1X+2)) || ((swordfishX > vertPath2X-2) && (swordfishX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
+  //.............................................................................maki..........................................................................
+  if((((makiX > vertPath1X-2) && (makiX < vertPath1X+2)) || ((makiX > vertPath2X-2) && (makiX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
     if((key == 'a') || (key == 'k')){
-      downOkSwordfish = true;
+      downOkmaki = true;
     }
   }
-  if (downOkSwordfish){
-    if(swordfishY < plateY){
-      swordfishY++;
+  if (downOkmaki){
+    if(makiY < plateY){
+      makiY++;
     } else {
-      if((swordfishX > vertPath1X-2) && (swordfishX < vertPath1X+2)){
+      if((makiX > vertPath1X-2) && (makiX < vertPath1X+2)){
         counter1++;
       } else {
         counter2++;
       }
-      downOkSwordfish = false;
+      downOkmaki = false;
     }
   } else {
-    swordfishX++;
+    makiX++;
   }
   
-  if(swordfishX > 39){
-    swordfishX = -22;
+  if(makiX > 39){
+    makiX = -22;
   }
   
   //blocking part
 
   //sushi display
-  if(swordfishY < plateY - platesDiameter/2-2){
+  if(makiY < plateY - platesDiameter/2-2){
     stroke(black);
     imageMode(CENTER);
-    if(downOkSwordfish){
+    if(downOkmaki){
       //translate(-eggX/2,-eggY/2);
       //rotate(PI/2.);
     }
-    image(swordfish_img, swordfishX, swordfishY, 18, 18);
+    image(maki_img, makiX, makiY);
   }
   
   //blocking part
