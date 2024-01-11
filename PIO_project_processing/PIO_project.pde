@@ -13,6 +13,8 @@ Serial serial;
 byte[]buffer;
 
 //images
+PImage logo_img;
+PImage scene1maki_img;
 PImage background_img;
 PImage win_img;
 PImage egg_img;
@@ -25,6 +27,7 @@ Confetti[] flake;
 int currentScene = 1;
 
 //colors
+color main = color(237,224,207);
 color red = color(255,0,0);
 color orange = color(204, 102, 0);
 color yellow = color(255,240,0);
@@ -91,10 +94,18 @@ int sushiType; //1,2,3
 
 //game running
 boolean isGameRunning = true;
+
+int interval1 = 2000; 
+int interval2 = 4000;
+int interval3 = 6000; 
+int lastTimeSwitch = 0;
+
   
 void setup() {
   size(32, 32);
   
+  logo_img = loadImage("SBlogo.png");
+  scene1maki_img = loadImage("scene1maki.png");
   background_img = loadImage("background.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
@@ -117,12 +128,7 @@ void setup() {
   } catch (Exception e) {
     println("Serial port not intialized...");
   }  
-  
-  background(0);
-  textAlign(CENTER);
-  text("Press", width/2-1, 11);  
-  text("to", width/2, height/2+4);  
-  text("start", width/2, height/2+13);  
+
 }
  
 void keyPressed(){
@@ -142,7 +148,7 @@ void keyReleased(){
 
 void draw() {    
   if (currentScene ==1){
-    setup();  
+    drawScene1();
   }else if (currentScene == 2) {
     drawScene2();
   } else if (currentScene == 3) {
@@ -165,6 +171,47 @@ void draw() {
   }
 }
 
+void setupScene1(){
+  lastTimeSwitch = millis();
+}
+
+void drawScene1(){
+  int currentTime = millis();
+
+  if (currentTime - lastTimeSwitch > interval3) {
+    displayFirstThing();
+    lastTimeSwitch = currentTime; 
+  } else if (currentTime - lastTimeSwitch > interval2) {
+    displayThirdThing();
+  } else if (currentTime - lastTimeSwitch > interval1) {
+    displaySecondThing();
+  } else {
+    displayFirstThing();
+  }
+}
+
+void displayThirdThing() {
+  background(main);
+  textAlign(CENTER);
+  fill(black);
+  text("Press", width/2-1, 11);  
+  text("to", width/2, height/2+4);  
+  text("start", width/2, height/2+13); 
+}
+
+void displaySecondThing() {
+  background(255);
+  imageMode(CENTER);
+  image(scene1maki_img, width/2, height/2, 32, 32);
+}
+
+void displayFirstThing(){
+  background(main);
+  textAlign(CENTER);
+  fill(orange);
+  text("Sushi", width/2+1, 13);  
+  text("Battle", width/2, 25);  
+}
 
 void setupScene2(){
 
@@ -255,6 +302,7 @@ void drawScene3(){
   
   if(key == ' '){
     currentScene = 1;
+    setup();
   }
 }
  
