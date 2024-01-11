@@ -72,10 +72,26 @@ boolean downOkEgg = false;
 boolean downOkrice = false;
 boolean downOkmaki = false;
 
+int sushiX = 10;
+int sushiY = horizPathY;
+boolean leftPathDown = false;
+boolean rightPathDown = false;
+
+boolean rightPathDownEgg = false;
+boolean leftPathDownEgg = false;
+boolean rightPathDownrice = false;
+boolean leftPathDownRice = false;
+boolean rightPathDownMaki = false;
+boolean leftPathDownMaki = false;
+
+int tab []= new int [2];
+int tab2 []= new int [2];
+  
+int sushiType; //1,2,3
+
 //game running
 boolean isGameRunning = true;
-
-
+  
 void setup() {
   size(32, 32);
   
@@ -84,7 +100,7 @@ void setup() {
   egg_img = loadImage("egg.png");  
   rice_img = loadImage("rice.png");  
   maki_img = loadImage("maki.png");  
-  
+ 
   isGameRunning = true;
 
   buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
@@ -104,31 +120,30 @@ void setup() {
   
   background(0);
   textAlign(CENTER);
-  fill(255);
   text("Press", width/2-1, 11);  
   text("to", width/2, height/2+4);  
   text("start", width/2, height/2+13);  
-  counter1 = 0;
-  counter2 = 0;
 }
  
 void keyPressed(){
-  if(isGameRunning == true){
-    if(key =='a' || key == 'k'){
-      currentScene = 2;
-      setupScene2();
-    }
+  if(key =='a' || key == 'k'){
+    currentScene = 2;
+    setupScene2();
   }
 }
 
 void keyReleased(){
-    //player2Blocked = false;
+    if(key == 's'){
+      player2Blocked = false;
+    }else if(key == 'l'){
+      player1Blocked = false;
+    }
 }
 
 void draw() {    
   if (currentScene ==1){
-    setup();
-  } else if (currentScene == 2) {
+    setup();  
+  }else if (currentScene == 2) {
     drawScene2();
   } else if (currentScene == 3) {
     drawScene3();
@@ -159,150 +174,31 @@ void drawScene2(){
   background(0);
   imageMode(CENTER);
   image(background_img, width/2,height/2);
-  //sushi path
-  //fill(white);
-  //stroke(blue);
-  //rectMode(CENTER);
-  //quad(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 8,32, 8-pathWidth,32); //left
-  //quad(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2, 24,32, 24+pathWidth,32); //right
-  //rect(ledLength/2-1,horizPathY,ledLength+2, pathWidth);
   
-  //rect(vertPath1X, vertPathY, pathWidth, vertPathLength);
-  //rect(vertPath2X, vertPathY, pathWidth, vertPathLength);
-  
-  //plates
-  //stroke(black);
-  //fill(white);
-  //ellipse(plateX1,plateY,platesDiameter,platesDiameter);
-  //ellipse(plateX2,plateY,platesDiameter,platesDiameter);
   
   //.............................................................................egg..........................................................................
-  //this block has to be used for each sushi (use a for loop?)
-  //
-  if((((eggX > vertPath1X-2) && (eggX < vertPath1X+2)) || ((eggX > vertPath2X-2) && (eggX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
-    if((key == 'a') || (key == 'k')){
-      downOkEgg = true;
-      if((eggX > vertPath1X-2) && (eggX < vertPath1X+2)){
-        counter1++;
-      } else if((eggX > vertPath2X-2) && (eggX < vertPath2X+2)){
-        counter2++;
-      }
-    }
-  }
-  if (downOkEgg){
-    if(eggY < plateY){
-      eggY++;
-    } else {
-      //
-      downOkEgg = false;
-    }
-  } else {
-    eggX++;
-  }
   
-  if(eggX > 39){
-    eggX = -22;
-  }
-  //sushi display
-  if(eggY < plateY - platesDiameter/2-2){
-    stroke(black);
-    imageMode(CENTER);
-    if(downOkEgg){
-      //translate(-eggX/2,-eggY/2);
-      //rotate(PI/2.);
-    }
-    image(egg_img, eggX, eggY);
-  }
   
   //.............................................................................rice..........................................................................
 
-  if((((riceX > vertPath1X-2) && (riceX < vertPath1X+2)) || ((riceX > vertPath2X-2) && (riceX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){ //add the "or second path" here
-    if((key == 'a') || (key == 'k')){
-      downOkrice = true;
-    }
-  }
-  if (downOkrice){
-    if(riceY < plateY){
-      riceY++;
-    } else {
-      if((riceX > vertPath1X-2) && (riceX < vertPath1X+2)){
-        counter1++;
-      } else {
-        counter2++;
-      }
-      downOkrice = false;
-    }
-  } else {
-    riceX++;
-  }
   
-  if(riceX > 39){
-    riceX = -22;
-  }
-  
-  //sushi display
-  if(riceY < plateY - platesDiameter/2-2){
-    stroke(black);
-    imageMode(CENTER);
-    if(downOkrice){
-      //translate(-eggX/2,-eggY/2);
-      //rotate(PI/2.);
-    }
-    image(rice_img, riceX, riceY);
-  }
   //.............................................................................maki..........................................................................
-  if((((makiX > vertPath1X-2) && (makiX < vertPath1X+2)) || ((makiX > vertPath2X-2) && (makiX < vertPath2X+2))) && keyPressed && !player1Blocked && !player2Blocked){
-    if((key == 'a') || (key == 'k')){
-      downOkmaki = true;
-    }
-  }
-  if (downOkmaki){
-    if(makiY < plateY){
-      makiY++;
-    } else {
-      if((makiX > vertPath1X-2) && (makiX < vertPath1X+2)){
-        counter1++;
-      } else {
-        counter2++;
-      }
-      downOkmaki = false;
-    }
-  } else {
-    makiX++;
-  }
   
-  if(makiX > 39){
-    makiX = -22;
-  }
 
-  //sushi display
-  if(makiY < plateY - platesDiameter/2-2){
-    stroke(black);
-    imageMode(CENTER);
-    if(downOkmaki){
-      //translate(-eggX/2,-eggY/2);
-      //rotate(PI/2.);
-    }
-    image(maki_img, makiX, makiY);
-  }
+  sushiType = 1;
+  tab2 = sushiMove(sushiType, eggX, eggY, egg_img);
+  eggX = tab2[0];
+  eggY = tab2[1];
+  sushiType = 2;
+  tab2 = sushiMove(sushiType, riceX, riceY, rice_img);
+  riceX = tab2[0];
+  riceY = tab2[1];
+  sushiType = 3;
+  sushiMove(sushiType, makiX, makiY, maki_img);
+  makiX = tab2[0];
+  makiY = tab2[1];
   
-  //blocking part
-  if (keyPressed){
-    if(key == 's'){ //long press
-      stroke(red);
-      line(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
-      player2Blocked = true;
-    } else {
-      player2Blocked = false;
-    }
-    if(key == 'l'){ //long press
-      stroke(green);
-      line(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
-      player1Blocked = true;
-    } else {
-      player1Blocked = false;
-    }
-  }
+  barrierDisplay();
   
   //points system
   fill(yellow);
@@ -360,4 +256,142 @@ void drawScene3(){
   if(key == ' '){
     currentScene = 1;
   }
- }
+}
+ 
+ 
+int[] sushiMove(int sushiType, int sushiX, int sushiY, PImage sushi_img){
+  
+
+  //tab[0] = 5;
+  //tab[1] = 6;
+  
+  
+  if(keyPressed){
+    if(key == 'a'){
+
+      if(!player1Blocked){
+        if((sushiX > vertPath1X-2) && (sushiX < vertPath1X+2)){
+          counter1++;
+          leftPathDown = true;
+          println("aaaaaaaaaaa");
+        }
+      }
+    } else if(key == 'k'){
+      if(!player2Blocked){
+        if((sushiX > vertPath2X-2) && (sushiX < vertPath2X+2)){
+          counter2++;
+          rightPathDown = true;
+        }
+      }
+    } else if(key == 's'){
+      player2Blocked = true;
+    } else if(key == 'l'){
+      player1Blocked = true;
+    }
+  }
+  
+  if(sushiType == 1){
+    rightPathDownEgg = rightPathDown;
+    leftPathDownEgg = leftPathDown;
+  }
+  else if(sushiType == 2){
+    rightPathDownrice = rightPathDown;
+    leftPathDownRice = leftPathDown;
+  }
+  else if(sushiType == 3){
+    rightPathDownMaki = rightPathDown;
+    leftPathDownMaki = leftPathDown;
+  }
+
+  //position incrementation for egg..........................................................................
+  if(leftPathDownEgg){
+    if(sushiY <= 39){
+      sushiY++;
+      sushiX--;
+    } else {
+      //return to initial position
+      leftPathDownEgg = false;
+    }
+  }else if(rightPathDownEgg){ //rightPathDown stays true for the 3 sushis !
+    if(sushiY <= 39){
+      sushiY++;
+      sushiX++;
+    } else {
+      //return to initial position
+      rightPathDownEgg = false;
+    }
+  }else{
+    sushiX++;
+    //println("111");
+  }
+  //position incrementation for rice....................................................................................
+  if(leftPathDownRice){
+    if(sushiY <= 39){
+      sushiY++;
+      sushiX--;
+    } else {
+      //return to initial position
+      leftPathDownRice = false;
+    }
+  }else if(rightPathDownrice){ //rightPathDown stays true for the 3 sushis !
+    if(sushiY <= 39){
+      sushiY++;
+      sushiX++;
+    } else {
+      //return to initial position
+      rightPathDownrice = false;
+      //sushiY= horizPathY;
+      //sushiX=-9;
+    }
+  }else{
+    sushiX++;
+    //println("111");
+  }
+  //position incrementation for maki...........................................................................................
+  if(leftPathDownMaki){
+    if(sushiY <= 39){
+      sushiY++;
+      sushiX--;
+    } else {
+      //return to initial position
+      leftPathDownMaki = false;
+    }
+  }else if(rightPathDownMaki){ //rightPathDown stays true for the 3 sushis !
+    if(sushiY <= 39){
+      sushiY++;
+      sushiX++;
+    } else {
+      //return to initial position
+      rightPathDownMaki = false;
+    }
+  }else{
+    sushiX++;
+    //println("111");
+  }
+  
+  
+  if(sushiX > 39 || sushiY > 39){
+    sushiX = -22;
+  }
+  
+
+  stroke(black);
+  imageMode(CENTER);
+  image(sushi_img, sushiX, sushiY);
+ 
+  tab[0] = sushiX;
+  tab[1] = sushiY;
+  
+  return tab;
+}
+
+void barrierDisplay(){
+  if(player1Blocked){
+    stroke(green);
+    line(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
+  }
+  if(player2Blocked){
+    stroke(red);
+    line(TOTAL_WIDTH/2+pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
+  }
+}
