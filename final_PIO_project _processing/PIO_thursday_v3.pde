@@ -16,13 +16,14 @@ Serial serial;
 byte[]buffer;
 
 //images
-PImage logo_img;
+PImage sushibattle_img;
+PImage presstostart_img;
 PImage scene1maki_img;
 PImage background_img;
 PImage win_img;
 PImage egg_img;
 PImage maki_img;
-PImage rice_img;
+PImage salmon_img;
 
 PFont sushiBattleFont;
 
@@ -63,8 +64,8 @@ int plateX2 = vertPath2X;
 //sushi
 int eggX = -10;
 int eggY = horizPathY;
-int riceX = -30;
-int riceY = horizPathY;
+int salmonX = -30;
+int salmonY = horizPathY;
 int makiX = -50;
 int makiY = horizPathY;
 
@@ -78,7 +79,7 @@ boolean player2Blocked = false;
 
 boolean downOk = false;
 boolean downOkEgg = false;
-boolean downOkrice = false;
+boolean downOksalmon = false;
 boolean downOkmaki = false;
 
 int sushiX = 10;
@@ -88,8 +89,8 @@ boolean rightPathDown = false;
 
 boolean rightPathDownEgg = false;
 boolean leftPathDownEgg = false;
-boolean rightPathDownRice = false;
-boolean leftPathDownRice = false;
+boolean rightPathDownsalmon = false;
+boolean leftPathDownsalmon = false;
 boolean rightPathDownMaki = false;
 boolean leftPathDownMaki = false;
 
@@ -112,12 +113,13 @@ void setup() {
   
   frameRate(10);
   
-  logo_img = loadImage("SBlogo.png");
+  sushibattle_img = loadImage("sushiBattle.png");  
+  presstostart_img = loadImage("presstostart.png");
   scene1maki_img = loadImage("scene1maki.png");
   background_img = loadImage("background.png");
   win_img = loadImage("win.png");  
   egg_img = loadImage("egg.png");  
-  rice_img = loadImage("rice.png");  
+  salmon_img = loadImage("salmon.png");  
   maki_img = loadImage("maki.png"); 
   
   gameMusic = new SoundFile(this, "gameMusic.mp3");
@@ -195,8 +197,8 @@ void setupScene1(){
   //rightPathDown = false;
   //eggX = -10;
   //eggY = horizPathY;
-  //riceX = -30;
-  //riceY = horizPathY;
+  //salmonX = -30;
+  //salmonY = horizPathY;
   //makiX = -50;
   //makiY = horizPathY;
   //tab[0] = 0;
@@ -206,8 +208,8 @@ void setupScene1(){
   
   //rightPathDownEgg = false;
   //leftPathDownEgg = false;
-  //rightPathDownRice = false;
-  //leftPathDownRice = false;
+  //rightPathDownsalmon = false;
+  //leftPathDownsalmon = false;
   //rightPathDownMaki = false;
   //leftPathDownMaki = false;
   
@@ -215,8 +217,8 @@ void setupScene1(){
   
   eggX = -10;
 eggY = horizPathY;
-riceX = -30;
-riceY = horizPathY;
+salmonX = -30;
+salmonY = horizPathY;
 makiX = -50;
 makiY = horizPathY;
 
@@ -230,7 +232,7 @@ player2Blocked = false;
 
 downOk = false;
 downOkEgg = false;
-downOkrice = false;
+downOksalmon = false;
 downOkmaki = false;
 
 sushiX = 10;
@@ -240,8 +242,8 @@ rightPathDown = false;
 
 rightPathDownEgg = false;
 leftPathDownEgg = false;
-rightPathDownRice = false;
-leftPathDownRice = false;
+rightPathDownsalmon = false;
+leftPathDownsalmon = false;
 rightPathDownMaki = false;
 leftPathDownMaki = false;
 
@@ -268,26 +270,20 @@ void drawScene1(){
 
 void displayThirdThing() {
   background(black);
-  textFont(sushiBattleFont);
-  textAlign(CENTER);
-  fill(main);
-  text("PRESS", width/2, 11);  
-  text("TO", width/2, height/2+4);  
-  text("START", width/2, height/2+13); 
+  imageMode(CENTER);
+  image(presstostart_img,  width/2, height/2, 32, 32);
 }
 
 void displaySecondThing() {
-  background(255);
+  background(black);
   imageMode(CENTER);
   image(scene1maki_img, width/2, height/2, 32, 32);
 }
 
 void displayFirstThing(){
   background(black);
-  textAlign(CENTER);
-  fill(orange);
-  text("SUSHI", width/2, 13);  
-  text("BATTLE", width/2, 25);  
+  imageMode(CENTER);
+  image(sushibattle_img,  width/2, height/2, 32, 32);
 }
 
 void setupScene2(){
@@ -305,11 +301,11 @@ void drawScene2(){
   tab2 = sushiMove(sushiType, eggX, eggY, egg_img);
   eggX = tab2[0];
   eggY = tab2[1];
-  //rice
+  //salmon
   sushiType = 2;
-  tab2 = sushiMove(sushiType, riceX, riceY, rice_img);
-  riceX = tab2[0];
-  riceY = tab2[1];
+  tab2 = sushiMove(sushiType, salmonX, salmonY, salmon_img);
+  salmonX = tab2[0];
+  salmonY = tab2[1];
   //maki
   sushiType = 3;
   sushiMove(sushiType, makiX, makiY, maki_img);
@@ -406,9 +402,9 @@ int[] sushiMove(int sushiType2, int sushiX, int sushiY, PImage sushi_img){
     rightPathDownEgg = rightPathDown;
     leftPathDownEgg = leftPathDown;
   }
-  else if(sushiType2 == 2 && !rightPathDownRice && !leftPathDownRice){
-    rightPathDownRice = rightPathDown;
-    leftPathDownRice = leftPathDown;
+  else if(sushiType2 == 2 && !rightPathDownsalmon && !leftPathDownsalmon){
+    rightPathDownsalmon = rightPathDown;
+    leftPathDownsalmon = leftPathDown;
   }
   else if(sushiType2 == 3 && !rightPathDownMaki && !leftPathDownMaki){
     rightPathDownMaki = rightPathDown;
@@ -437,24 +433,24 @@ int[] sushiMove(int sushiType2, int sushiX, int sushiY, PImage sushi_img){
       rightPathDownEgg = false;
     }
   }
-  //position incrementation for rice.......................................................................................................................
-  else if(leftPathDownRice && sushiType == 2){
+  //position incrementation for salmon.......................................................................................................................
+  else if(leftPathDownsalmon && sushiType == 2){
     if(sushiY < 34){
       sushiY++;
       sushiX--;
     } else {
       sushiY++;
       sushiX--;
-      leftPathDownRice = false;
+      leftPathDownsalmon = false;
     }
-  }else if(rightPathDownRice && sushiType == 2){
+  }else if(rightPathDownsalmon && sushiType == 2){
     if(sushiY < 34){
       sushiY++;
       sushiX++;
     } else {
       sushiY++;
       sushiX++;
-      rightPathDownRice = false;
+      rightPathDownsalmon = false;
     }
   }
   //position incrementation for maki......................................................................................................................
