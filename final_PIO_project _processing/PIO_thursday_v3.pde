@@ -1,0 +1,443 @@
+/**
+ * Sushi Battle by Claudia Neo and Kristina Greco
+ */
+
+import processing.serial.*;
+import processing.sound.*;
+SoundFile gameMusic;
+SoundFile winSound;
+
+final int TOTAL_WIDTH  = 32;
+final int TOTAL_HEIGHT = 32;
+final int NUM_CHANNELS = 3;
+final int BAUD_RATE    = 921600;
+
+Serial serial;
+byte[]buffer;
+
+//images
+PImage logo_img;
+PImage scene1maki_img;
+PImage background_img;
+PImage win_img;
+PImage egg_img;
+PImage maki_img;
+PImage rice_img;
+
+//music
+
+
+//confetti
+Confetti[] flake;
+
+int currentScene = 1;
+
+//colors
+color main = color(237,224,207);
+color red = color(255,0,0);
+color orange = color(204, 102, 0);
+color yellow = color(255,240,0);
+color green = color(0,255,0);
+color blue = color(0,0,150);
+color violet = color(30,30,100);
+color grey = color(150,150,150);
+color black = color(0);
+color white = color(150);
+
+//path
+int ledLength = 32;
+int pathWidth = 14;
+int horizPathY = 8;
+int vertPath1X = 8;
+int vertPath2X = ledLength-vertPath1X;
+int vertPathY = 20;
+int vertPathLength = 15;
+
+//goal(plates)
+int platesDiameter = 15;
+int platesDiameterSmall = 10;
+int plateY = 32;
+int plateX1 = vertPath1X;
+int plateX2 = vertPath2X;
+
+//sushi
+int eggX = -10;
+int eggY = horizPathY;
+int riceX = -30;
+int riceY = horizPathY;
+int makiX = -50;
+int makiY = horizPathY;
+
+//counters
+int counter1 = 0;
+int counter2 = 0;
+
+//blocking part
+boolean player1Blocked = false;
+boolean player2Blocked = false;
+
+boolean downOk = false;
+boolean downOkEgg = false;
+boolean downOkrice = false;
+boolean downOkmaki = false;
+
+int sushiX = 10;
+int sushiY = horizPathY;
+boolean leftPathDown = false;
+boolean rightPathDown = false;
+
+boolean rightPathDownEgg = false;
+boolean leftPathDownEgg = false;
+boolean rightPathDownRice = false;
+boolean leftPathDownRice = false;
+boolean rightPathDownMaki = false;
+boolean leftPathDownMaki = false;
+
+int tab []= new int [2];
+int tab2 []= new int [2];
+  
+int sushiType; //1,2,3
+
+//game running
+boolean isGameRunning = true;
+
+int interval1 = 2000; 
+int interval2 = 4000;
+int interval3 = 6000; 
+int lastTimeSwitch = 0;
+
+  
+void setup() {
+  size(32, 32);
+  
+  frameRate(10);
+  
+  logo_img = loadImage("SBlogo.png");
+  scene1maki_img = loadImage("scene1maki.png");
+  background_img = loadImage("background.png");
+  win_img = loadImage("win.png");  
+  egg_img = loadImage("egg.png");  
+  rice_img = loadImage("rice.png");  
+  maki_img = loadImage("maki.png"); 
+  
+  gameMusic = new SoundFile(this, "gameMusic.mp3");
+  winSound = new SoundFile(this, "winSound.wav");
+ 
+  isGameRunning = true;
+
+  buffer = new byte[TOTAL_WIDTH * TOTAL_HEIGHT * NUM_CHANNELS];
+
+  String[] list = Serial.list();
+  printArray(list);
+  
+  try {
+    // On macOS / Linux see the console for all wavailable ports
+    //final String PORT_NAME = "/dev/cu.usbserial-02B60E77";
+    // On Windows the ports are numbered
+    final String PORT_NAME = "COM5";
+    serial = new Serial(this, PORT_NAME, BAUD_RATE);
+  } catch (Exception e) {
+    println("Serial port not intialized...");
+  }  
+
+}
+ 
+void keyPressed(){
+  if(currentScene ==1 && (key =='a' || key == 'k' || key == 's' || key == 'l')){
+    currentScene = 2;
+    setupScene2();
+  }
+}
+
+void keyReleased(){
+    if(key == 's'){
+      player2Blocked = false;
+    }else if(key == 'l'){
+      player1Blocked = false;
+    }
+}
+
+void draw() {    
+  if (currentScene ==1){
+    drawScene1();
+  }else if (currentScene == 2) {
+    drawScene2();
+  } else if (currentScene == 3) {
+    drawScene3();
+  }
+  
+  // -------------------------------------------------------------------------------------------------------------------------------------------------
+  // Write to the serial port (if open)
+  if (serial != null) {
+    loadPixels();
+    int idx = 0;
+    for (int i=0; i<pixels.length; i++) {
+      color c = pixels[i];
+      buffer[idx++] = (byte)(c >> 16 & 0xFF); // r
+      buffer[idx++] = (byte)(c >> 8 & 0xFF);  // g
+      buffer[idx++] = (byte)(c & 0xFF);       // b
+    }
+    serial.write('*');     // The 'data' command
+    serial.write(buffer);  // ...and the pixel values
+  }
+}
+
+void setupScene1(){
+  lastTimeSwitch = millis();
+}
+
+void drawScene1(){
+  int currentTime = millis();
+
+  if (currentTime - lastTimeSwitch > interval3) {
+    displayFirstThing();
+    lastTimeSwitch = currentTime; 
+  } else if (currentTime - lastTimeSwitch > interval2) {
+    displayThirdThing();
+  } else if (currentTime - lastTimeSwitch > interval1) {
+    displaySecondThing();
+  } else {
+    displayFirstThing();
+  }
+}
+
+void displayThirdThing() {
+  background(main);
+  textAlign(CENTER);
+  fill(black);
+  text("Press", width/2-1, 11);  
+  text("to", width/2, height/2+4);  
+  text("start", width/2, height/2+13); 
+}
+
+void displaySecondThing() {
+  background(255);
+  imageMode(CENTER);
+  image(scene1maki_img, width/2, height/2, 32, 32);
+}
+
+void displayFirstThing(){
+  background(main);
+  textAlign(CENTER);
+  fill(orange);
+  text("Sushi", width/2+1, 13);  
+  text("Battle", width/2, 25);  
+}
+
+void setupScene2(){
+  gameMusic.play();
+}
+
+void drawScene2(){
+  background(0);
+  imageMode(CENTER);
+  image(background_img, width/2,height/2); //size : ,40,32
+  
+  //egg
+  sushiType = 1;
+  tab2 = sushiMove(sushiType, eggX, eggY, egg_img);
+  eggX = tab2[0];
+  eggY = tab2[1];
+  //rice
+  sushiType = 2;
+  tab2 = sushiMove(sushiType, riceX, riceY, rice_img);
+  riceX = tab2[0];
+  riceY = tab2[1];
+  //maki
+  sushiType = 3;
+  sushiMove(sushiType, makiX, makiY, maki_img);
+  makiX = tab2[0];
+  makiY = tab2[1];
+  
+  barrierDisplay();
+  
+  //points system
+  fill(yellow);
+  stroke(yellow);
+  line(15,0,16,0);
+  fill(red);
+  stroke(red);
+  line(0,0,counter1,0);
+  fill(green);
+  stroke(green);
+  line(31,0,31-counter2,0);
+  
+  if((counter1 == 14) || (counter2 == 14)){//14
+    currentScene = 3;
+    setupScene3();
+  } 
+}
+
+
+void setupScene3(){
+  background(0);
+  gameMusic.pause();
+  winSound.play();
+
+  flake = new Confetti[100];
+  for(int i=0; i<flake.length; i++){
+    flake[i] = new Confetti();
+    }
+}
+
+void drawScene3(){
+  background(0);
+  isGameRunning = false;
+  
+  //confetti
+  for(Confetti f : flake){
+    f.fall();
+    f.display();
+    }
+    
+  //points system
+  fill(yellow);
+  stroke(yellow);
+  line(15,0,16,0);
+  fill(red);
+  stroke(red);
+  line(0,0,counter1,0);
+  fill(green);
+  stroke(green);
+  line(31,0,31-counter2,0);
+  
+  //winning image
+  imageMode(CENTER);
+  image(win_img, width/2, height/2, 20, 20);
+  
+  if(key == ' '){
+    currentScene = 1;
+    setup();
+  }
+}
+ 
+ 
+int[] sushiMove(int sushiType2, int sushiX, int sushiY, PImage sushi_img){
+  if(keyPressed){
+    if(key == 'a'){
+      if(!player1Blocked && !player2Blocked){
+        if((sushiX > vertPath1X+3) && (sushiX < vertPath1X+7)){
+          counter1++;
+          leftPathDown = true;
+        }
+      }
+    } else if(key == 'k'){
+      if(!player2Blocked && !player1Blocked){
+        if((sushiX > vertPath2X-7) && (sushiX < vertPath2X-3)){
+          counter2++;
+          rightPathDown = true;
+        }
+      }
+    } else if(key == 's'){
+      player2Blocked = true;
+    } else if(key == 'l'){
+      player1Blocked = true;
+    }
+  }
+
+  if(sushiType2 == 1 && !rightPathDownEgg && !leftPathDownEgg){
+    rightPathDownEgg = rightPathDown;
+    leftPathDownEgg = leftPathDown;
+  }
+  else if(sushiType2 == 2 && !rightPathDownRice && !leftPathDownRice){
+    rightPathDownRice = rightPathDown;
+    leftPathDownRice = leftPathDown;
+  }
+  else if(sushiType2 == 3 && !rightPathDownMaki && !leftPathDownMaki){
+    rightPathDownMaki = rightPathDown;
+    leftPathDownMaki = leftPathDown;
+  }
+  rightPathDown = false;
+  leftPathDown = false;
+
+  //position incrementation for egg........................................................................................................................
+  if(leftPathDownEgg && sushiType == 1){
+    if(sushiY < 34){
+      sushiY++;
+      sushiX--;
+    } else {
+      sushiY++;
+      sushiX--;
+      leftPathDownEgg = false;
+    }
+  }else if(rightPathDownEgg && sushiType == 1){
+    if(sushiY < 34){
+      sushiY++;
+      sushiX++;
+    } else {
+      sushiY++;
+      sushiX++;
+      rightPathDownEgg = false;
+    }
+  }
+  //position incrementation for rice.......................................................................................................................
+  else if(leftPathDownRice && sushiType == 2){
+    if(sushiY < 34){
+      sushiY++;
+      sushiX--;
+    } else {
+      sushiY++;
+      sushiX--;
+      leftPathDownRice = false;
+    }
+  }else if(rightPathDownRice && sushiType == 2){
+    if(sushiY < 34){
+      sushiY++;
+      sushiX++;
+    } else {
+      sushiY++;
+      sushiX++;
+      rightPathDownRice = false;
+    }
+  }
+  //position incrementation for maki......................................................................................................................
+  else if(leftPathDownMaki && sushiType == 3){
+    if(sushiY < 34){
+      sushiY++;
+      sushiX--;
+    } else {
+      sushiY++;
+      sushiX--;
+      leftPathDownMaki = false;
+    }
+  }else if(rightPathDownMaki && sushiType == 3){
+    if(sushiY < 34){
+      sushiY++;
+      sushiX++;
+    } else {
+      sushiY++;
+      sushiX++;
+      rightPathDownMaki = false;
+    }
+  }else{
+    sushiX++;
+  }
+  if((sushiX > 50 || sushiY > 34)){
+    sushiX = -22;
+    sushiY = horizPathY;
+  }
+  //quand y vaut 30, que vaut x?
+  println("sushiXY");
+  println(sushiX);
+  println(sushiY);
+  
+  stroke(black);
+  imageMode(CENTER);
+  image(sushi_img, sushiX, sushiY);
+ 
+  tab[0] = sushiX; //à enregistrer en tant que makiX ou eggX,... (le return est inutile)
+  tab[1] = sushiY;
+  
+  return tab;
+}
+
+void barrierDisplay(){
+  if(player1Blocked){
+    stroke(green);
+    line(TOTAL_WIDTH/2-pathWidth, horizPathY+pathWidth/2, TOTAL_WIDTH/2-1, horizPathY+pathWidth/2);
+  }
+  if(player2Blocked){
+    stroke(red);
+    line(TOTAL_WIDTH/2+pathWidth-1, horizPathY+pathWidth/2, TOTAL_WIDTH/2, horizPathY+pathWidth/2);
+  }
+}
