@@ -325,7 +325,7 @@ void drawScene2(){
   stroke(green);
   line(31,0,31-counter2,0);
   
-  if((counter1 == 3) || (counter2 == 3)){//14
+  if((counter1 == 14) || (counter2 == 14)){//14
     currentScene = 3;
     setupScene3();
   } 
