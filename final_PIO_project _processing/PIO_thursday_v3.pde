@@ -24,7 +24,7 @@ PImage egg_img;
 PImage maki_img;
 PImage rice_img;
 
-//music
+PFont sushiBattleFont;
 
 
 //confetti
@@ -35,7 +35,7 @@ int currentScene = 1;
 //colors
 color main = color(237,224,207);
 color red = color(255,0,0);
-color orange = color(204, 102, 0);
+color orange = color(255, 160, 0);
 color yellow = color(255,240,0);
 color green = color(0,255,0);
 color blue = color(0,0,150);
@@ -122,6 +122,8 @@ void setup() {
   
   gameMusic = new SoundFile(this, "gameMusic.mp3");
   winSound = new SoundFile(this, "winSound.wav");
+  
+  sushiBattleFont = createFont("Arial Bold", 8);
  
   isGameRunning = true;
 
@@ -184,6 +186,69 @@ void draw() {
 
 void setupScene1(){
   lastTimeSwitch = millis();
+  //counter1 = 0;
+  //counter2 = 0;
+  //isGameRunning = true;
+  //sushiX = 10;
+  //sushiY = horizPathY;
+  //leftPathDown = false;
+  //rightPathDown = false;
+  //eggX = -10;
+  //eggY = horizPathY;
+  //riceX = -30;
+  //riceY = horizPathY;
+  //makiX = -50;
+  //makiY = horizPathY;
+  //tab[0] = 0;
+  //tab[1] = 0;
+  //tab2[0] = 0;
+  //tab2[1] = 0;
+  
+  //rightPathDownEgg = false;
+  //leftPathDownEgg = false;
+  //rightPathDownRice = false;
+  //leftPathDownRice = false;
+  //rightPathDownMaki = false;
+  //leftPathDownMaki = false;
+  
+  //.............................................
+  
+  eggX = -10;
+eggY = horizPathY;
+riceX = -30;
+riceY = horizPathY;
+makiX = -50;
+makiY = horizPathY;
+
+//counters
+counter1 = 0;
+counter2 = 0;
+
+//blocking part
+player1Blocked = false;
+player2Blocked = false;
+
+downOk = false;
+downOkEgg = false;
+downOkrice = false;
+downOkmaki = false;
+
+sushiX = 10;
+sushiY = horizPathY;
+leftPathDown = false;
+rightPathDown = false;
+
+rightPathDownEgg = false;
+leftPathDownEgg = false;
+rightPathDownRice = false;
+leftPathDownRice = false;
+rightPathDownMaki = false;
+leftPathDownMaki = false;
+
+tab[0] = 0;
+tab[1] = 0;
+tab2[0] = 0;
+tab2[1] = 0;
 }
 
 void drawScene1(){
@@ -202,12 +267,13 @@ void drawScene1(){
 }
 
 void displayThirdThing() {
-  background(main);
+  background(black);
+  textFont(sushiBattleFont);
   textAlign(CENTER);
-  fill(black);
-  text("Press", width/2-1, 11);  
-  text("to", width/2, height/2+4);  
-  text("start", width/2, height/2+13); 
+  fill(main);
+  text("PRESS", width/2, 11);  
+  text("TO", width/2, height/2+4);  
+  text("START", width/2, height/2+13); 
 }
 
 void displaySecondThing() {
@@ -217,15 +283,16 @@ void displaySecondThing() {
 }
 
 void displayFirstThing(){
-  background(main);
+  background(black);
   textAlign(CENTER);
   fill(orange);
-  text("Sushi", width/2+1, 13);  
-  text("Battle", width/2, 25);  
+  text("SUSHI", width/2, 13);  
+  text("BATTLE", width/2, 25);  
 }
 
 void setupScene2(){
   gameMusic.play();
+  gameMusic.loop();
 }
 
 void drawScene2(){
@@ -262,7 +329,7 @@ void drawScene2(){
   stroke(green);
   line(31,0,31-counter2,0);
   
-  if((counter1 == 14) || (counter2 == 14)){//14
+  if((counter1 == 3) || (counter2 == 3)){//14
     currentScene = 3;
     setupScene3();
   } 
@@ -307,7 +374,7 @@ void drawScene3(){
   
   if(key == ' '){
     currentScene = 1;
-    setup();
+    setupScene1();
   }
 }
  
@@ -416,7 +483,7 @@ int[] sushiMove(int sushiType2, int sushiX, int sushiY, PImage sushi_img){
     sushiX = -22;
     sushiY = horizPathY;
   }
-  //quand y vaut 30, que vaut x?
+  
   println("sushiXY");
   println(sushiX);
   println(sushiY);
