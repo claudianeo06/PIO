@@ -8,7 +8,6 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "c:/Users/greco/Documents/GitHub/PIO/include",
                 "c:/Users/greco/Documents/GitHub/PIO/src",
                 "c:/Users/greco/Documents/GitHub/PIO/.pio/libdeps/esp32dev/SmartMatrix/src",
                 "C:/Users/greco/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
@@ -107,7 +106,6 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "c:/Users/greco/Documents/GitHub/PIO/include",
                     "c:/Users/greco/Documents/GitHub/PIO/src",
                     "c:/Users/greco/Documents/GitHub/PIO/.pio/libdeps/esp32dev/SmartMatrix/src",
                     "C:/Users/greco/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
@@ -205,7 +203,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60111",
+                "PLATFORMIO=60112",
                 "ARDUINO_ESP32_DEV",
                 "ESP32",
                 "ESP_PLATFORM",
